@@ -1,0 +1,25 @@
+name: Daily Meta Cost Report
+
+on:
+  schedule:
+    # JST 朝 8時 = UTC 前日 23時
+    - cron: "0 23 * * *"
+  workflow_dispatch:
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - run: npm install
+      - name: Daily cost report - Anteprima
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          META_ACCOUNT_ID: "2897156057128787"
+          SLACK_CHANNEL_ID: "C0B3W49LSGZ"
+          SLACK_THREAD_TS: "1782195718.888059"
+          SLACK_USER_MENTION: "U06U8RQC6CQ"
+        run: node scripts/daily-cost-report/index.js
